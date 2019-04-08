@@ -1,0 +1,7 @@
+html {
+    font-family: Helvetica;
+}
+.container{
+    display: flex;
+    justify-content: center;
+}

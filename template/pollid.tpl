@@ -20,38 +20,38 @@
 		% else:
 		<p>Question: {{x[4]}}</p>
 		<p>Type: {{x[1]}}</p>
-		<p>Start time: {{x[2].strftime('%d %B, %Y - %H:%M:%S')}}</p>
-		<p>End time: {{x[3].strftime('%d %B, %Y - %H:%M:%S')}}</p>
+		<p>Start time: {{x[2].strftime('%d %B %Y - %H:%M:%S')}}</p>
+		<p>End time: {{x[3].strftime('%d %B %Y - %H:%M:%S')}}</p>
 		% end
 		% end
 		% if x[1] == 'OPTION':
 		<p><b>Options:</b></p>
 		% cursor.execute('SELECT text FROM poll_option WHERE pollid = ' + pollid)
 		% result = cursor.fetchall()
-		% for y in range(len(result)):
-		<p>{{y+1}}. {{result[y][0]}}</p>
-		% end
-		<p><b>Votes:</b></p>
 		% cursor.execute('SELECT COUNT(*) FROM poll_vote WHERE pollid = ' + pollid + ' AND optionid = 1')
-		% count = cursor.fetchall()
-		<p>Option 1: {{count[0][0]}}</p>
+		% result1 = cursor.fetchall()
 		% cursor.execute('SELECT COUNT(*) FROM poll_vote WHERE pollid = ' + pollid + ' AND optionid = 2')
-		% count = cursor.fetchall()
-		<p>Option 2: {{count[0][0]}}</p>
+		% result2 = cursor.fetchall()
+		<p>1. {{result[0][0]}}: {{result1[0][0]}}</p>
+		<p>2. {{result[1][0]}}: {{result2[0][0]}}</p>
 		% elif x[1] == 'TEXT':
 		% cursor.execute('SELECT replytext FROM poll_textreply WHERE pollid = ' + pollid)
 		% result = cursor.fetchall()
+		<p><b>Replies:</b></p>
 		% for z in range(len(result)):
-		<p><u>Reply {{z}}:</u> {{result[z][0]}}</p>
+		<p><b>{{z}}:</b> {{result[z][0]}}</p>
 		% end
 		% elif x[1] == 'NUMVAL':
 		% cursor.execute('SELECT * FROM poll_option WHERE pollid = ' + pollid)
 		% result = cursor.fetchall()
+		<p><b>Options:</b></p>
 		<p>Poll description: {{result[0][2]}}</p>
-		<p>Minimum rating description: {{result[0][5]}} | Middle rating description: {{result[0][6]}} | Maximum rating description: {{result[0][7]}}</p>
+		<p>Minimum rating description: {{result[0][5]}}</p>
+		<p>Middle rating description: {{result[0][6]}}</p>
+		<p>Maximum rating description: {{result[0][7]}}</p>
 		<p>Minimum rating: {{result[0][3]}}</p>
 		<p>Maximum rating: {{result[0][4]}}</p>
-		<p>Votes:</p>
+		<p><b>Votes:</b></p>
 		% for a in range(result[0][4] + 1):
 		% cursor.execute('SELECT COUNT(*) FROM poll_vote WHERE pollid = ' + pollid + ' AND rating = ' + str(a))
 		% result = cursor.fetchall()
@@ -59,12 +59,10 @@
 		% end
 		% elif x[1] == 'MULTICHOICE':
 		<p><b>Options:</b></p>
-		% cursor.execute('SELECT text FROM poll_option WHERE pollid = ' + pollid)
+		% cursor.execute('SELECT COUNT(v.id) as VOTES, p.text FROM poll_vote v LEFT JOIN poll_option p ON v.optionid = p.id WHERE v.pollid = ' + pollid + ' GROUP BY v.optionid')
 		% result = cursor.fetchall()
-		% for y in range(len(result)):
-		% cursor.execute('SELECT COUNT(*) FROM poll_vote WHERE pollid = ' + pollid + ' AND optionid = ' + str(y + 2))
-		% result2 = cursor.fetchall()
-		<p>{{result[y][0]}}: {{result2[0][0]}}</p>
+		% for y in result:
+		<p>{{y[1]}} : {{y[0]}}</p>
 		% end
 		% end
 	</div>

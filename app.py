@@ -1,5 +1,4 @@
 from bottle import route, run, get, static_file, template, default_app
-from datetime import datetime
 import configparser
 import mysql.connector
 

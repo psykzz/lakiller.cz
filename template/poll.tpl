@@ -7,9 +7,9 @@
 	<link rel="shortcut icon" type="image/x-icon" href="/static/favicon.png"/>
 </head>
 <body>
-	<div class='header'>Select a poll:</div>
+	<div class='header'>Select a poll | <a href='/'>Back</a></div>
 	<div class='container'>
-		<ul class="list">
+		<ul class="left">
 		% cursor.execute("SELECT * FROM poll_question LIMIT 50")
 		% if not cursor:
 			Database query failed. Please tell LaKiller.
@@ -18,7 +18,7 @@
 		% if x[5] == 1 or x[9] == 1:
 		% continue
 		% else:
-		<li>Question: {{x[4]}} <a href='/poll/{{x[0]}}'>View</a></li>
+		<li>Poll {{x[0]}}: {{x[4]}} <a href='/poll/{{x[0]}}'>View</a></li>
 		% end
 		% end
 		</ul>

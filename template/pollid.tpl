@@ -10,13 +10,13 @@
 <body>
 	<div class='header'>Poll Information | <a href='/poll'>Back</a></div>
 	<div class='container left'>
-		% cursor.execute('SELECT * FROM poll_question WHERE id = ' + pollid)
 		<p><b>Information about poll ID {{pollid}}:</b></p>
+		% cursor.execute('SELECT * FROM poll_question WHERE id = ' + pollid)
 		% result = cursor.fetchall()
 		% for x in result:
 		% if x[5] == 1 or x[9] == 1:
 		<p>Access Denied</p>
-		<p>Adminonly: {{bool(x[5])}} | Hide from view: {{bool(x[9])}}</p>
+		% continue
 		% else:
 		<p>Question: {{x[4]}}</p>
 		<p>Type: {{x[1]}}</p>

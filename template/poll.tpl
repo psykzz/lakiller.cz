@@ -9,13 +9,17 @@
 <body>
 	<div class='header'>Select a poll | <a href='/'>Back</a></div>
 	<div class='container'>
+		<form form action='/poll' method='get'>
+			Offset: <input value='{{offset}}' name='offset' type='text'/> <input value='Load' type='submit'/>
+		</form>
 		<ul class="left">
-		% cursor.execute("SELECT * FROM poll_question")
-		% for x in cursor:
-		% if x[5] == 1 or x[9] == 1:
+		% cursor.execute("SELECT id, question, adminonly, dontshow FROM poll_question LIMIT 50 OFFSET " + str(offset))
+		% result = cursor.fetchall()
+		% for x in result:
+		% if x[2] == 1 or x[3] == 1:
 		% continue
 		% else:
-		<li>Poll {{x[0]}}: {{x[4]}} | <a href='/poll/{{x[0]}}'>View</a></li>
+		<li>Poll {{x[0]}}: {{x[1]}} | <a href='/poll/{{x[0]}}'>View</a></li>
 		% end
 		% end
 		</ul>

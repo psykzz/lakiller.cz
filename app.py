@@ -1,9 +1,13 @@
 from bottle import route, run, request, static_file, template, default_app
 import configparser
 import mysql.connector
+from os import path
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+if path.isfile('production.ini'):
+	config.read('production.ini')
+else:
+	config.read('config.ini')
 dbconfig = config['Database']
 
 dbusername = dbconfig['dbusername']
@@ -12,13 +16,7 @@ dbhost = dbconfig['dbhost']
 dbport = dbconfig['dbport']
 dbname = dbconfig['dbname']
 
-connected = False 
-
-try:
-	database = mysql.connector.connect(user = dbusername, password = dbpassword, host = dbhost, port = dbport, database = dbname)
-	connected = True
-except:
-	pass
+database = mysql.connector.connect(user = dbusername, password = dbpassword, host = dbhost, port = dbport, database = dbname)
 
 cursor = database.cursor(buffered = True)
 
@@ -47,9 +45,8 @@ def send_static(filename):
 	return static_file(filename, root='static/')
 
 
-if __name__ == "__main__" and connected:
-	run(host='localhost', port=8080)
+if __name__ == "__main__":
+	run(host = 'localhost', port = 8080)
 
-
-elif (connected):
+else:
 	application = default_app()

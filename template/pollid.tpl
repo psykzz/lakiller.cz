@@ -1,4 +1,5 @@
 % from datetime import datetime
+% pollid = str(pollid)
 <html>
 <head>
 	<meta charset="utf-8">

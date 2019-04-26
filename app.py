@@ -16,9 +16,31 @@ dbhost = dbconfig['dbhost']
 dbport = dbconfig['dbport']
 dbname = dbconfig['dbname']
 
-database = mysql.connector.connect(user = dbusername, password = dbpassword, host = dbhost, port = dbport, database = dbname)
+database = None
+cursor = None
 
-cursor = database.cursor(buffered = True)
+try:
+	database = mysql.connector.connect(user = dbusername, password = dbpassword, host = dbhost, port = dbport, database = dbname)
+	cursor = database.cursor(buffered = True)
+except:
+	pass
+
+
+def handle_connection():
+	if not database:
+		return False
+	status = database.is_connected()
+	if not status:
+		database.reconnect()
+	status = database.is_connected()
+	if not status:
+		return False
+	else:
+		return True
+		
+
+def connection_error():
+	return template('template/error')
 
 
 @route("/")
@@ -28,6 +50,8 @@ def index(cursor = cursor):
 
 @route("/poll", method = "GET")
 def poll(cursor = cursor):
+	if not handle_connection():
+		return connection_error()
 	offset = request.query.offset
 	try:
 		offset = int(offset)
@@ -37,6 +61,8 @@ def poll(cursor = cursor):
 
 @route("/poll/<pollid:int>")
 def pollid(cursor = cursor, pollid = None):
+	if not handle_connection():
+		return connection_error()
 	return template('template/pollid', cursor = cursor, pollid = pollid)
 
 

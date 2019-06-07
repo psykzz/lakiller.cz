@@ -1,0 +1,2 @@
+bottle==0.12.16
+mysql-connector-python==8.0.16

@@ -1,2 +1,4 @@
 
 config/production\.ini
+
+src/__pycache__/

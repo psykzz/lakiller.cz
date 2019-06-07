@@ -57,4 +57,8 @@ def try_connect():
 
 
 def connection_error():
-	return template('template/error')
+	return generate_template(template('template/error'))
+
+
+def generate_template(templ):
+	return template('template/header') + templ + template('template/footer')

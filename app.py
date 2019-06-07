@@ -6,7 +6,7 @@ cursor = None
 
 @route("/")
 def index(cursor = cursor):
-	 return template('template/index', cursor = cursor)
+	 return src.base.generate_template(template('template/index', cursor = cursor))
 
 
 @route("/poll", method = "GET")
@@ -18,7 +18,7 @@ def poll():
 
 	offset = request.query.offset
 
-	return template('template/poll', cursor = cursor, offset = offset)
+	return src.base.generate_template(template('template/poll', cursor = cursor, offset = offset))
 
 
 @route("/poll/<pollid:int>")
@@ -28,7 +28,7 @@ def pollid(pollid = None):
 	if not src.base.handle_connection():
 		return src.base.connection_error()
 
-	return template('template/pollid', cursor = cursor, pollid = pollid)
+	return src.base.generate_template(template('template/pollid', cursor = cursor, pollid = pollid))
 
 
 @route('/static/<filename:path>')

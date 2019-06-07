@@ -6,7 +6,10 @@ from os import path
 database = None
 cursor = None
 
-def handle_connection(database, cursor):
+def handle_connection():
+	global database
+	global cursor
+
 	if database is None:
 		try_connect()
 
@@ -27,6 +30,9 @@ def handle_connection(database, cursor):
  
 
 def try_connect():
+	global database
+	global cursor
+
 	config = ConfigParser()
 
 	if path.isfile('config/production.ini'):

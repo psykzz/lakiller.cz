@@ -1,8 +1,8 @@
-from bottle import default_app, run, route, template, static_file
+from bottle import default_app, run, route, template, static_file, request
 import src.base
-import src.poll
 
-cursor = src.base.cursor
+database = None
+cursor = None
 
 @route("/")
 def index(cursor = cursor):
@@ -18,11 +18,7 @@ def poll():
 
 	offset = request.query.offset
 
-	try:
-		offset = int(offset)
-		return template('template/poll', cursor = cursor, offset = offset)
-	except:
-		return template('template/poll', cursor = cursor, offset = 0)
+	return template('template/poll', cursor = cursor, offset = offset)
 
 
 @route("/poll/<pollid:int>")
@@ -41,6 +37,10 @@ def send_static(filename):
 
 
 src.base.try_connect()
+
+
+database = src.base.database
+cursor = src.base.cursor
 
 
 if __name__ == "__main__":

@@ -12,12 +12,8 @@
 		<form form action='/poll' method='get'>
 			Offset: <input value='{{offset}}' name='offset' type='text'/> <input value='Load' type='submit'/>
 		</form>
-		<ul class="left">
-		% polls = src.poll.get_valid_polls()
-		% for x in polls:
-		<li>Poll {{x[0]}}: {{x[1]}} | <a href='/poll/{{x[0]}}'>View</a></li>
-		% end
-		</ul>
+		% import src.poll
+		{{! src.poll.get_valid_polls(cursor, offset)}}
 	</div>
 	<div class='footer'><a href='/'>Home</a> | Made by LaKiller8 | <a href='https://github.com/DominikPanic/lakiller.cz'>Source</a></div>
 </body>

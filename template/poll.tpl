@@ -13,14 +13,9 @@
 			Offset: <input value='{{offset}}' name='offset' type='text'/> <input value='Load' type='submit'/>
 		</form>
 		<ul class="left">
-		% cursor.execute("SELECT id, question, adminonly, dontshow FROM poll_question LIMIT 50 OFFSET " + str(offset))
-		% result = cursor.fetchall()
-		% for x in result:
-		% if x[2] == 1 or x[3] == 1:
-		% continue
-		% else:
+		% polls = src.poll.get_valid_polls()
+		% for x in polls:
 		<li>Poll {{x[0]}}: {{x[1]}} | <a href='/poll/{{x[0]}}'>View</a></li>
-		% end
 		% end
 		</ul>
 	</div>

@@ -1,66 +1,8 @@
-from bottle import route, run, request, static_file, template, default_app
-import configparser
-import mysql.connector
-from os import path
+from bottle import default_app, run, route, template, static_file
+import src.base
+import src.poll
 
-config = configparser.ConfigParser()
-
-if path.isfile('production.ini'):
-	config.read('production.ini')
-else:
-	config.read('config.ini')
-
-dbconfig = config['Database']
-
-dbusername = dbconfig['dbusername']
-dbpassword = dbconfig['dbpassword']
-dbhost = dbconfig['dbhost']
-dbport = dbconfig['dbport']
-dbname = dbconfig['dbname']
-
-database = None
-cursor = None
-
-
-def handle_connection():
-	global database
-	global cursor
-
-	if database is None:
-		try_connect()
-
-	if database is None:
-		return False
-
-	status = database.is_connected()
-	if status:
-		return True
-	else:
-		try_connect()
-
-	status = database.is_connected()
-	if status:
-		return True
-	else:
-		return False
-
-
-def try_connect():
-	global database
-	global cursor
-
-	try:
-		database = mysql.connector.connect(user = dbusername, password = dbpassword, host = dbhost, port = dbport, database = dbname)
-		cursor = database.cursor(buffered = True)
-	
-	except:
-		pass
-
-
-def connection_error():
-	return template('template/error')
-
-
+cursor = src.base.cursor
 
 @route("/")
 def index(cursor = cursor):
@@ -71,8 +13,8 @@ def index(cursor = cursor):
 def poll():
 	global cursor
 
-	if not handle_connection():
-		return connection_error()
+	if not src.base.handle_connection():
+		return src.base.connection_error()
 
 	offset = request.query.offset
 
@@ -87,18 +29,18 @@ def poll():
 def pollid(pollid = None):
 	global cursor
 
-	if not handle_connection():
-		return connection_error()
+	if not src.base.handle_connection():
+		return src.base.connection_error()
 
 	return template('template/pollid', cursor = cursor, pollid = pollid)
 
 
 @route('/static/<filename:path>')
 def send_static(filename):
-	return static_file(filename, root='static/')
+	return static_file(filename, root = 'static/')
 
 
-try_connect()
+src.base.try_connect()
 
 
 if __name__ == "__main__":

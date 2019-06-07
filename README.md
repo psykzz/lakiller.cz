@@ -10,7 +10,7 @@ dbusername = username //The username for your database account.
 dbpassword = password //The password for your database account.
 dbhost = 127.0.0.1 //The IP address of your database server. If you're running both on one machine, leave it be.
 dbport = 3306 //The port of your database server.
-dbname = feedback //The table with the json feedback values. This should work by default.
+dbname = feedback //This is the name of the database, you likely won't need to change it.
 ```
 
 # Contributing

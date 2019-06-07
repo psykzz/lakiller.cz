@@ -9,6 +9,13 @@ body {
 	justify-content: center;
 	align-items: center;
 }
+a {
+	color: gray;
+	text-decoration: none;
+}
+a:hover {
+	color: silver;
+}
 .header {
 	font-size: 150%;
 	margin-top: 20px;

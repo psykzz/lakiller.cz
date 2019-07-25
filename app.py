@@ -1,38 +1,35 @@
-from bottle import default_app, run, route, template, static_file, request
+from flask import Flask, render_template, request, abort
 import src.base
+import src.poll
 
+app = Flask(__name__)
 statbus = src.base.Statbus()
 
-@route("/")
+@app.route("/")
 def index():
-	 return statbus.generate_template(template('template/index', cursor = statbus.cursor))
+	 return render_template('index.tpl', cursor = statbus.cursor)
 
 
-@route("/poll", method = "GET")
+@app.route("/poll")
 def poll():
-	if not statbus.handle_connection():
-		return statbus.connection_error()
-
-	offset = request.query.offset
-
-	return statbus.generate_template(template('template/poll', cursor = statbus.cursor, offset = offset))
+	if not statbus.is_connected():
+		abort(500)
+	offset = request.args.get('offset', '')
+	return render_template('poll.tpl', cursor = statbus.cursor, offset = offset, poll = src.poll)
 
 
-@route("/poll/<pollid:int>")
+@app.route("/poll/<int:pollid>")
 def pollid(pollid = None):
-	if not statbus.handle_connection():
-		return statbus.connection_error()
+	if not statbus.is_connected():
+		abort(500)
+	return render_template('pollid.tpl', cursor = statbus.cursor, pollid = pollid, poll = src.poll)
 
-	return statbus.generate_template(template('template/pollid', cursor = statbus.cursor, pollid = pollid))
 
-
-@route('/static/<filename:path>')
-def send_static(filename):
-	return static_file(filename, root = 'static/')
+@app.errorhandler(500)
+def internal_error(error):
+	statbus.try_reconnect()
+	return render_template('error.tpl'), 500
 
 
 if __name__ == "__main__":
-	run(host = 'localhost', port = 8080)
-
-else:
-	application = default_app()
+	app.run()

@@ -1,9 +1,9 @@
 # lakiller.cz
-This is an open source statbus for the [/tg/station](https://github.com/tgstation/tgstation/) database code Space Station 13 server. It was created to provide a python alternative for those that dislike other languages.
+This is an open source statbus for the [/tg/station](https://github.com/tgstation/tgstation/) database code Space Station 13 server. It was created to provide a python alternative.
 
 # Requirements
 The following packages are required:
-* bottle
+* Flask (and it's requirements)
 * mysql-connector-python
 
 You can install the requirements from the requirements.txt file.
@@ -15,9 +15,9 @@ Make sure you have a read-only database account and that you have whitelisted ju
 [Database]
 dbusername = username //The username for your database account.
 dbpassword = password //The password for your database account.
-dbhost = 127.0.0.1 //The IP address of your database server. If you're running both on one machine, leave it be.
-dbport = 3306 //The port of your database server.
-dbname = feedback //This is the name of the database, you likely won't need to change it.
+dbhost = 127.0.0.1    //The IP address of your database server. If you're running both on one machine, leave it be.
+dbport = 3306         //The port of your database server.
+dbname = feedback     //This is the name of the database, you likely won't need to change it.
 ```
 
 # Contributing

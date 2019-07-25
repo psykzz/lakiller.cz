@@ -1,11 +1,11 @@
 from mysql.connector import connect, cursor
 from configparser import ConfigParser
-from bottle import template
 from os import path
 
 class Statbus():
 	database = None
 	cursor = None
+	token = None
 
 
 	def __init__(self):
@@ -28,6 +28,10 @@ class Statbus():
 		dbport = dbconfig['dbport']
 		dbname = dbconfig['dbname']
 
+
+		general = config['General']
+		self.token = general['token']
+
 		try:
 			self.database = connect(user = dbusername, password = dbpassword, host = dbhost, port = dbport, database = dbname)
 			self.cursor = self.database.cursor(buffered = True)
@@ -36,7 +40,7 @@ class Statbus():
 			return False
 
       
-	def handle_connection(self):
+	def try_reconnect(self):
 		if self.database is None:
 			self.try_connect()
 
@@ -47,18 +51,20 @@ class Statbus():
 		if status:
 			return True
 		else:
-			try_connect()
+			self.try_connect()
 
 		status = self.database.is_connected()
 		if status:
 			return True
 		else:
 			return False
- 
 
-	def connection_error(self):
-		return self.generate_template(template('template/error'))
+	def is_connected(self):
+		if self.database is None:
+			return False
+
+		return self.database.is_connected()
 
 
 	def generate_template(self, templ):
-		return template('template/header') + templ + template('template/footer')
+		return render_template('header.tpl') + templ + render_template('footer.tpl')

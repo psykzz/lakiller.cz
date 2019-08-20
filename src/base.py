@@ -28,10 +28,6 @@ class Statbus():
 		dbport = dbconfig['dbport']
 		dbname = dbconfig['dbname']
 
-
-		general = config['General']
-		self.token = general['token']
-
 		try:
 			self.database = connect(user = dbusername, password = dbpassword, host = dbhost, port = dbport, database = dbname)
 			self.cursor = self.database.cursor(buffered = True)

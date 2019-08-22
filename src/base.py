@@ -1,11 +1,13 @@
-from mysql.connector import connect, cursor
+from mysql.connector import connect, cursor, errorcode, Error
 from configparser import ConfigParser
 from os import path
+
+class DatabaseError(Exception):
+    pass
 
 class Statbus():
 	database = None
 	cursor = None
-	token = None
 
 
 	def __init__(self):
@@ -32,35 +34,23 @@ class Statbus():
 			self.database = connect(user = dbusername, password = dbpassword, host = dbhost, port = dbport, database = dbname)
 			self.cursor = self.database.cursor(buffered = True)
 			return True
-		except:
-			return False
+		except Error as e:
+			self.database = None
+			self.cursor = None
+			return e
 
-      
+	  
 	def try_reconnect(self):
-		if self.database is None:
-			self.try_connect()
+		if self.database:
+			self.database.close()
+			self.database = None
+			self.cursor = None
 
-		if self.database is None:
-			return False
+		return self.try_connect()
 
-		status = self.database.is_connected()
-		if status:
-			return True
-		else:
-			self.try_connect()
-
-		status = self.database.is_connected()
-		if status:
-			return True
-		else:
-			return False
 
 	def is_connected(self):
 		if self.database is None:
 			return False
 
 		return self.database.is_connected()
-
-
-	def generate_template(self, templ):
-		return render_template('header.tpl') + templ + render_template('footer.tpl')

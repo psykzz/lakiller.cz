@@ -1,4 +1,5 @@
 {% extends "base.tpl" %}
 {% block body %}
-<p>Seems like the connection to the database failed. Apologies for the trouble.</p>
+<h2>Error {{ error.code }}</h2>
+<p>{{ error.description }}</p>
 {% endblock body %}

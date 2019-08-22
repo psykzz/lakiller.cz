@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, abort, redirect
+from flask import Flask, render_template, request, abort
 import src.base
 import src.poll
 

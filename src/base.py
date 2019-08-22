@@ -1,9 +1,11 @@
-from mysql.connector import connect, cursor, errorcode, Error
+from mysql.connector import connect, cursor, Error
 from configparser import ConfigParser
 from os import path
 
+
 class DatabaseError(Exception):
     pass
+
 
 class Statbus():
 	database = None

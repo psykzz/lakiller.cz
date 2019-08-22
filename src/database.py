@@ -3,50 +3,28 @@ from playhouse.flask_utils import FlaskDB
 from dotenv import load_dotenv
 from os import getenv
 from peewee import *
+from flask import abort
 
 
-class Database():
-	app = None
-	db = None
-	wrapper = FlaskDB()
+def database_connect():
+	load_dotenv()
+	dbusername = getenv("STATBUS_DBUSERNAME")
+	dbpassword = getenv("STATBUS_DBPASSWORD")
+	dbhost = getenv("STATBUS_DBHOST")
+	dbport = getenv("STATBUS_DBPORT")
+	dbname = getenv("STATBUS_DBNAME")
+
+	try:
+		db = MySQLConnectorDatabase(database = dbname, host = dbhost, port = dbport, user = dbusername, passwd = dbpassword)
+		return db
+	except:
+		abort(500)
 
 
-	def __init__(self, app):
-		load_dotenv()
-		self.app = app
+db_wrapper = FlaskDB(None, database_connect())
 
 
-	def connect(self):
-		dbusername = getenv("STATBUS_DBUSERNAME")
-		dbpassword = getenv("STATBUS_DBPASSWORD")
-		dbhost = getenv("STATBUS_DBHOST")
-		dbport = getenv("STATBUS_DBPORT")
-		dbname = getenv("STATBUS_DBNAME")
-
-		try:
-			self.db = MySQLConnectorDatabase(database = dbname, host = dbhost, port = dbport, user = dbusername, passwd = dbpassword)
-			self.wrapper = FlaskDB(self.app, self.db)
-		except Exception as e:
-			self.db = None
-			self.wrapper = None
-			return e
-
-		return True
-
-
-	def disconnect(self):
-		if self.db:
-			self.db.close()
-
-		self.db = None
-		self.wrapper = None
-
-
-class DatabaseError(Exception):
-	pass
-
-
-class Poll_option(Database.wrapper.Model):
+class Poll_option(db_wrapper.Model):
 	id = IntegerField(unique = True)
 	pollid = IntegerField()
 	text = CharField()
@@ -58,7 +36,7 @@ class Poll_option(Database.wrapper.Model):
 	default_percentage_calc = IntegerField(default = 1)
 
 
-class Poll_question(Database.wrapper.Model):
+class Poll_question(db_wrapper.Model):
 	id = IntegerField(unique = True)
 	polltype = CharField()
 	starttime = DateTimeField()
@@ -70,8 +48,14 @@ class Poll_question(Database.wrapper.Model):
 	createdby_ip = IntegerField()
 	dontshow = IntegerField()
 
+	def is_shown(self):
+		return adminonly or dontshow
 
-class Poll_textreply(Database.wrapper.Model):
+	def basic_link(self):
+		return f"<li>Poll {self.id} {self.question} | <a href='/poll/{self.pollid}'>View</a></li>"
+
+
+class Poll_textreply(db_wrapper.Model):
 	id = IntegerField(unique = True)
 	datetime = DateTimeField()
 	pollid = IntegerField()
@@ -81,7 +65,7 @@ class Poll_textreply(Database.wrapper.Model):
 	adminrank = CharField(max_length = 32, default = "Player")
 
 
-class Poll_vote(Database.wrapper.Model):
+class Poll_vote(db_wrapper.Model):
 	id = IntegerField(unique = True)
 	datetime = DateTimeField()
 	pollid = IntegerField()

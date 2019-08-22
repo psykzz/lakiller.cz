@@ -1,91 +1,90 @@
-from datetime import datetime
+from .database import Poll_question, Poll_option, Poll_vote, Poll_textreply
 
 class Poll():
-	"""
-	statbus = None
-	cursor = None
-
-
-	def __init__(self):
-		self.statbus = Statbus()
-		self.cursor = self.statbus.cursor
-
-
 	def get_valid_polls(self, offset):
-		try: 
-			offset = int(offset)
-		except:
+		if not offset:
 			offset = 0
-		self.cursor.execute("SELECT id, question, adminonly, dontshow FROM poll_question LIMIT 50 OFFSET " + str(offset))
-		result = self.cursor.fetchall()
-		dat = "<ul class='left'>"
-		for pollid, question, adminonly, dontshow in result:
-			if adminonly == 1 or dontshow == 1:
-				continue
-			dat += f"<li>Poll {pollid} {question} | <a href='/poll/{pollid}'>View</a></li>"
-		dat += "</ul>"
 
-		return dat
+		data = Poll_question.select(
+			Poll_question.id,
+			Poll_question.question,
+			Poll_question.adminonly,
+			Poll_question.dontshow
+		).limit(50).offset(offset)
+
+		html = "<ul>"
+
+		for poll in data:
+			if poll.is_hidden():
+				continue
+			html += poll.basic_link()
+
+		html += "</ul>"
+
+		return html
 
 
 	def handle_polltype(self, pollid):
-		pollid = str(pollid)
-		self.cursor.execute('SELECT * FROM poll_question WHERE id = ' + pollid)
-		result = self.cursor.fetchall()
-		x = result[0]
+		data = Poll_question.select().where(Poll_question.id == pollid).first()
 
-		if x[5] == 1 or x[9] == 1:
-			return "<p>Access Denied</p>"
+		if not data:
+			return "<p>Poll not found.</p>"
 
-		dat = f
-	<p>Question: {x[4]}</p>
-	<p>Type: {x[1]}</p>
-	<p>Start time: {x[2].strftime('%d %B %Y - %H:%M:%S')}</p>
-	<p>End time: {x[3].strftime('%d %B %Y - %H:%M:%S')}</p>
+		if data.is_hidden():
+			return "<p>Access denied.</p>"
+
+		if data.polltype == "OPTION":
+			return self.poll_option(data)
+
+		elif data.polltype == "TEXT":
+			return self.poll_text(data)
+
+		elif data.polltype == "NUMVAL":
+			return self.poll_numval(data)
+
+		elif data.polltype == "MULTICHOICE":
+			return self.poll_multichoice(data)
+
+		elif data.polltype == "IRV":
+			return self.poll_irv(data)
+
+
+	def poll_option(self, data):
+		pollid = data.pollid
+
+		html = "<p><b>Options:</b></p>"
+
+		onedesc = Poll_option.select(Poll_option.text).where(Poll_option.pollid == pollid).first()
+		twodesc = Poll_option.select(Poll_option.text).where(Poll_option.pollid == pollid).second()
+
+		onevotes = Poll_vote.select().where(Poll_vote.pollid == pollid and Poll_vote.optionid == 1).count().first()
+		twovotes = Poll_vote.select().where(Poll_vote.pollid == pollid and Poll_vote.optionid == 2).count().first()
+
+		html += f"<p>1. {result[0][0]}: {onevotes}</p>"
+		html += f"<p>2. {result[1][0]}: {twovotes}</p>"
+
+		return html
+
+
+	def poll_text(self, data):
+		pollid = data.pollid
+
+		replies = Poll_textreply.select(Poll_textreply.replytext).where(Poll_textreply.pollid == pollid).get()
 		
-
-		if x[1] == "OPTION":
-			dat += poll_option(pollid)
-		elif x[1] == "TEXT":
-			dat += poll_text(pollid)
-		elif x[1] == "NUMVAL":
-			dat += poll_numval(pollid)
-		elif x[1] == "MULTICHOICE":
-			dat += poll_multichoice(pollid)
-		elif x[1] == "IRV":
-			dat += poll_irv(pollid)
+		html = "<p><b>Replies:</b></p>"
+		for z in range(len(replies)):
+			dat += f"<p><b>{z}:</b> {replies[z][0]}</p>"
 
 		return dat
 
 
-	def poll_option(self, pollid):
-		dat = "<p><b>Options:</b></p>"
-		self.cursor.execute('SELECT text FROM poll_option WHERE pollid = ' + pollid)
-		result = self.cursor.fetchall()
-		self.cursor.execute('SELECT COUNT(*) FROM poll_vote WHERE pollid = ' + pollid + ' AND optionid = 1')
-		first = self.cursor.fetchall()
-		self.cursor.execute('SELECT COUNT(*) FROM poll_vote WHERE pollid = ' + pollid + ' AND optionid = 2')
-		second = self.cursor.fetchall()
-		dat += f"<p>1. {result[0][0]}: {first[0][0]}</p>"
-		dat += f"<p>2. {result[1][0]}: {second[0][0]}</p>"
+	def poll_numval(self, data):
+		pollid = data.pollid
 
-		return dat
+		numval = Poll_option.select().where(Poll_option.pollid == pollid).first()
 
-
-	def poll_text(self, pollid):
-		self.cursor.execute('SELECT replytext FROM poll_textreply WHERE pollid = ' + pollid)
-		result = self.cursor.fetchall()
-		dat = "<p><b>Replies:</b></p>"
-		for z in range(len(result)):
-			dat += f"<p><b>{z}:</b> {result[z][0]}</p>"
-
-		return dat
-
-
-	def poll_numval(self, pollid):
-		self.cursor.execute('SELECT * FROM poll_option WHERE pollid = ' + pollid)
-		result = self.cursor.fetchall()
-		dat = f
+		html = ""
+	"""
 	<p><b>Options:</b></p>
 	<p>Poll description: {result[0][2]}</p>
 	<p>Minimum rating description: {result[0][5]}</p>
@@ -101,12 +100,12 @@ class Poll():
 			dat += f"<p>Rating {x}: {result[0][0]}</p>"
 
 		return dat
-
-
-	def poll_multichoice(self, pollid):
-		return "<p>This type of poll is currently not implemented.</p>"
-
-
-	def poll_irv(self, pollid):
-		return "<p>This type of poll is currently not implemented.</p>"
 	"""
+
+
+	def poll_multichoice(self, data):
+		return "<p>This type of poll is currently not implemented.</p>"
+
+
+	def poll_irv(self, data):
+		return "<p>This type of poll is currently not implemented.</p>"

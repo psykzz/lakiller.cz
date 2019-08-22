@@ -1,4 +1,2 @@
-
-config/production\.ini
-
 src/__pycache__/
+src/\.env

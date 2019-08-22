@@ -1,7 +1,7 @@
 from datetime import datetime
-from src.base import Statbus
 
 class Poll():
+	"""
 	statbus = None
 	cursor = None
 
@@ -37,12 +37,12 @@ class Poll():
 		if x[5] == 1 or x[9] == 1:
 			return "<p>Access Denied</p>"
 
-		dat = f"""
+		dat = f
 	<p>Question: {x[4]}</p>
 	<p>Type: {x[1]}</p>
 	<p>Start time: {x[2].strftime('%d %B %Y - %H:%M:%S')}</p>
 	<p>End time: {x[3].strftime('%d %B %Y - %H:%M:%S')}</p>
-		"""
+		
 
 		if x[1] == "OPTION":
 			dat += poll_option(pollid)
@@ -85,7 +85,7 @@ class Poll():
 	def poll_numval(self, pollid):
 		self.cursor.execute('SELECT * FROM poll_option WHERE pollid = ' + pollid)
 		result = self.cursor.fetchall()
-		dat = f"""
+		dat = f
 	<p><b>Options:</b></p>
 	<p>Poll description: {result[0][2]}</p>
 	<p>Minimum rating description: {result[0][5]}</p>
@@ -94,7 +94,7 @@ class Poll():
 	<p>Minimum rating: {result[0][3]}</p>
 	<p>Maximum rating: {result[0][4]}</p>
 	<p><b>Votes:</b></p>
-	"""
+	
 		for x in range(result[0][4] + 1):
 			self.cursor.execute('SELECT COUNT(*) FROM poll_vote WHERE pollid = ' + pollid + ' AND rating = ' + str(x))
 			result = self.cursor.fetchall()
@@ -109,3 +109,4 @@ class Poll():
 
 	def poll_irv(self, pollid):
 		return "<p>This type of poll is currently not implemented.</p>"
+	"""

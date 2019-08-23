@@ -1,12 +1,10 @@
 from dotenv import load_dotenv
-load_dotenv()
-
 from os import getenv
-
 from playhouse.mysql_ext import MySQLConnectorDatabase
 from playhouse.flask_utils import FlaskDB
-
 from peewee import *
+
+load_dotenv()
 
 dbusername = getenv("STATBUS_DBUSERNAME")
 dbpassword = getenv("STATBUS_DBPASSWORD")

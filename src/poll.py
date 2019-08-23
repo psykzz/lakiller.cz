@@ -60,8 +60,8 @@ class Poll():
 		onevotes = Poll_vote.select().where(Poll_vote.pollid == pollid and Poll_vote.optionid == 1).count().first()
 		twovotes = Poll_vote.select().where(Poll_vote.pollid == pollid and Poll_vote.optionid == 2).count().first()
 
-		html += f"<p>1. {result[0][0]}: {onevotes}</p>"
-		html += f"<p>2. {result[1][0]}: {twovotes}</p>"
+		html += f"<p>1. {onedesc}: {onevotes}</p>"
+		html += f"<p>2. {twodesc}: {twovotes}</p>"
 
 		return html
 

@@ -1,16 +1,7 @@
-from dotenv import load_dotenv
-from os import getenv
 from playhouse.mysql_ext import MySQLConnectorDatabase
 from playhouse.flask_utils import FlaskDB
 from peewee import *
-
-load_dotenv()
-
-dbusername = getenv("STATBUS_DBUSERNAME")
-dbpassword = getenv("STATBUS_DBPASSWORD")
-dbhost = getenv("STATBUS_DBHOST")
-dbport = getenv("STATBUS_DBPORT")
-dbname = getenv("STATBUS_DBNAME")
+from .config import dbusername, dbpassword, dbhost, dbport, dbname
 
 db = MySQLConnectorDatabase(database = dbname, host = dbhost, port = dbport, user = dbusername, passwd = dbpassword)
 db_wrapper = FlaskDB(None, db)

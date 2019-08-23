@@ -1,15 +1,18 @@
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request
+from flask_caching import Cache
 from playhouse.flask_utils import FlaskDB
 from .database import db_wrapper
 from .poll import Poll
 
 
 app = Flask(__name__)
+cache = Cache(app)
 db_wrapper.init_app(app)
 poll = Poll()
 
 
 @app.route("/")
+@cache.cached(timeout = 50)
 def index():
 	return render_template('index.tpl')
 

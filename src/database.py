@@ -1,27 +1,29 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+from os import getenv
+
 from playhouse.mysql_ext import MySQLConnectorDatabase
 from playhouse.flask_utils import FlaskDB
-from dotenv import load_dotenv
-from os import getenv
+
 from peewee import *
 
-
-load_dotenv()
 dbusername = getenv("STATBUS_DBUSERNAME")
 dbpassword = getenv("STATBUS_DBPASSWORD")
 dbhost = getenv("STATBUS_DBHOST")
 dbport = getenv("STATBUS_DBPORT")
 dbname = getenv("STATBUS_DBNAME")
 
-try:
-	db = MySQLConnectorDatabase(database = dbname, host = dbhost, port = dbport, user = dbusername, passwd = dbpassword)
-except:
-	pass
-
-
+db = MySQLConnectorDatabase(database = dbname, host = dbhost, port = dbport, user = dbusername, passwd = dbpassword)
 db_wrapper = FlaskDB(None, db)
 
 
-class Poll_option(db_wrapper.Model):
+class DBModel(db_wrapper.Model):
+	class Meta:
+		database = db
+
+
+class Poll_option(DBModel):
 	id = IntegerField(unique = True)
 	pollid = IntegerField()
 	text = CharField()
@@ -33,7 +35,7 @@ class Poll_option(db_wrapper.Model):
 	default_percentage_calc = IntegerField(default = 1)
 
 
-class Poll_question(db_wrapper.Model):
+class Poll_question(DBModel):
 	id = IntegerField(unique = True)
 	polltype = CharField()
 	starttime = DateTimeField()
@@ -52,7 +54,7 @@ class Poll_question(db_wrapper.Model):
 		return f"<li>Poll {self.id} {self.question} | <a href='/poll/{self.pollid}'>View</a></li>"
 
 
-class Poll_textreply(db_wrapper.Model):
+class Poll_textreply(DBModel):
 	id = IntegerField(unique = True)
 	datetime = DateTimeField()
 	pollid = IntegerField()
@@ -62,7 +64,7 @@ class Poll_textreply(db_wrapper.Model):
 	adminrank = CharField(max_length = 32, default = "Player")
 
 
-class Poll_vote(db_wrapper.Model):
+class Poll_vote(DBModel):
 	id = IntegerField(unique = True)
 	datetime = DateTimeField()
 	pollid = IntegerField()

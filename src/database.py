@@ -3,25 +3,22 @@ from playhouse.flask_utils import FlaskDB
 from dotenv import load_dotenv
 from os import getenv
 from peewee import *
-from flask import abort
 
 
-def database_connect():
-	load_dotenv()
-	dbusername = getenv("STATBUS_DBUSERNAME")
-	dbpassword = getenv("STATBUS_DBPASSWORD")
-	dbhost = getenv("STATBUS_DBHOST")
-	dbport = getenv("STATBUS_DBPORT")
-	dbname = getenv("STATBUS_DBNAME")
+load_dotenv()
+dbusername = getenv("STATBUS_DBUSERNAME")
+dbpassword = getenv("STATBUS_DBPASSWORD")
+dbhost = getenv("STATBUS_DBHOST")
+dbport = getenv("STATBUS_DBPORT")
+dbname = getenv("STATBUS_DBNAME")
 
-	try:
-		db = MySQLConnectorDatabase(database = dbname, host = dbhost, port = dbport, user = dbusername, passwd = dbpassword)
-		return db
-	except:
-		abort(500)
+try:
+	db = MySQLConnectorDatabase(database = dbname, host = dbhost, port = dbport, user = dbusername, passwd = dbpassword)
+except:
+	pass
 
 
-db_wrapper = FlaskDB(None, database_connect())
+db_wrapper = FlaskDB(None, db)
 
 
 class Poll_option(db_wrapper.Model):

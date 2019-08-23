@@ -45,8 +45,8 @@ class Poll_question(DBModel):
 	createdby_ip = IntegerField()
 	dontshow = IntegerField()
 
-	def is_shown(self):
-		return adminonly or dontshow
+	def is_hidden(self):
+		return self.adminonly or self.dontshow
 
 	def basic_link(self):
 		return f"<li>Poll {self.id} {self.question} | <a href='/poll/{self.pollid}'>View</a></li>"

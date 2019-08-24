@@ -1,16 +1,24 @@
 from playhouse.mysql_ext import MySQLConnectorDatabase
 from playhouse.flask_utils import FlaskDB
 from peewee import *
-from .config import dbusername, dbpassword, dbhost, dbport, dbname
+from .config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 
-db = MySQLConnectorDatabase(database = dbname, host = dbhost, port = dbport, user = dbusername, passwd = dbpassword)
+
+# Setup the mysql connection and flaskdb wrapper.
+db = MySQLConnectorDatabase(database = DB_NAME, host = DB_HOST, port = DB_PORT, user = DB_USER, passwd = DB_PASS)
 db_wrapper = FlaskDB(None, db)
 
 
+
+
+# Meta model all models should parent from
 class DBModel(db_wrapper.Model):
 	class Meta:
 		database = db
 
+'''
+Models!
+'''
 
 class Poll_option(DBModel):
 	id = IntegerField(unique = True)
@@ -39,8 +47,9 @@ class Poll_question(DBModel):
 	def is_hidden(self):
 		return self.adminonly or self.dontshow
 
-	def basic_link(self):
-		return f"<li>Poll {self.id} {self.question} | <a href='/poll/{self.pollid}'>View</a></li>"
+	@property
+	def link_url(self):
+		return f"/poll/{self.pollid}"
 
 
 class Poll_textreply(DBModel):

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+    <form form action='/poll' method='get'>
+        Offset: 
+        <input value='{{offset}}' name='offset' type='text'/> <br />
+        <input value='Load' type='submit'/>
+    </form>
+    <div>
+        <ul>
+            {% for poll in polls %}
+                <li>
+                    Poll #{{poll.id}} {{poll.question}}<a href='{{poll.link_url}}'>View</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock body %}

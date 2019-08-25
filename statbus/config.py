@@ -6,12 +6,6 @@ import tempfile
 # This should always be the first line.
 load_dotenv()
 
-DB_USER = getenv("STATBUS_DBUSERNAME")
-DB_PASS = getenv("STATBUS_DBPASSWORD")
-DB_HOST = getenv("STATBUS_DBHOST")
-DB_PORT = getenv("STATBUS_DBPORT")
-DB_NAME = getenv("STATBUS_DBNAME")
-
 DATABASE = {
     "engine": "playhouse.mysql_ext.MySQLConnectorDatabase",
     "name": getenv("STATBUS_DBNAME"),

@@ -16,6 +16,4 @@ DATABASE = {
 }
 
 CACHE_TYPE = "filesystem"
-CACHE_DIR = "/tmp/flask"  # This needs to exist
-if os.name == "nt":
-    CACHE_DIR = tempfile.mkdtemp()
+CACHE_DIR = tempfile.mkdtemp()

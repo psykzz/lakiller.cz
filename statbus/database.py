@@ -1,6 +1,7 @@
 from playhouse.mysql_ext import MySQLConnectorDatabase
-from playhouse.flask_utils import FlaskDB
 from peewee import *
+
+from statbus.util import FlaskDBWrapper as FlaskDB
 
 # Setup the mysql connection and flaskdb wrapper.
 db_wrapper = FlaskDB()

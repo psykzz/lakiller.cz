@@ -11,6 +11,8 @@ def create_app(test_config = None):
 	app.config.from_pyfile("config.py")
 	if test_config:
 		app.config.update(test_config)
+
+	# Cache and db setup
 	cache.init_app(app)
 	db_wrapper.init_app(app)
 

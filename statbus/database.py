@@ -1,3 +1,4 @@
+from flask import url_for
 from playhouse.mysql_ext import MySQLConnectorDatabase
 from playhouse.flask_utils import FlaskDB
 from peewee import *
@@ -40,7 +41,7 @@ class Poll_question(DBModel):
 
 	@property
 	def link_url(self):
-		return f"/poll/{self.pollid}"
+		return url_for('polls.view_poll', poll_id=self.id)
 
 
 class Poll_textreply(DBModel):

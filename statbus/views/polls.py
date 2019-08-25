@@ -19,19 +19,13 @@ def pollmain():
 		.offset(offset)
 	)
 
-	valid_polls = {}
-
-	for poll in polls:
-		if poll.is_hidden():
-			continue
-		valid_polls += poll
-	
+	valid_polls = [poll for poll in polls if poll.id_hidden()]
 	return render_template("polls/polls.html", offset = offset, polls = valid_polls)
 
 
 @bp.route("/poll/<int:poll_id>")
-def pollid(poll_id):
-	poll = Poll_question.select().where(Poll_question.id == pollid).first()
+def view_poll(poll_id):
+	poll = Poll_question.select().where(Poll_question.id == poll_id).first()
 	if not poll or poll.is_hidden():
 		abort(404)
 

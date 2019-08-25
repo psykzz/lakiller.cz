@@ -13,15 +13,15 @@ DB_PORT = getenv("STATBUS_DBPORT")
 DB_NAME = getenv("STATBUS_DBNAME")
 
 DATABASE = {
-    'engine': 'playhouse.mysql_ext.MySQLConnectorDatabase',
-    'name': getenv("STATBUS_DBNAME"),
-    'host': getenv("STATBUS_DBHOST"),
-    'port': getenv("STATBUS_DBPORT"),
-    'user': getenv("STATBUS_DBUSERNAME"),
-    'passwd': getenv("STATBUS_DBPASSWORD"),
+    "engine": "playhouse.mysql_ext.MySQLConnectorDatabase",
+    "name": getenv("STATBUS_DBNAME"),
+    "host": getenv("STATBUS_DBHOST"),
+    "port": getenv("STATBUS_DBPORT"),
+    "user": getenv("STATBUS_DBUSERNAME"),
+    "passwd": getenv("STATBUS_DBPASSWORD"),
 }
 
 CACHE_TYPE = "filesystem"
-CACHE_DIR = "/tmp/flask" # This needs to exist
-if os.name == 'nt':
+CACHE_DIR = "/tmp/flask"  # This needs to exist
+if os.name == "nt":
     CACHE_DIR = tempfile.mkdtemp()

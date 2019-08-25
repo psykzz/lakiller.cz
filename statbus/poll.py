@@ -1,4 +1,4 @@
-from .app import cache
+from statbus.app import cache
 from .database import Poll_question, Poll_option, Poll_vote, Poll_textreply
 
 

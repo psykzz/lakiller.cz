@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 
 from statbus.database import db_wrapper
 from statbus.cache import cache
-from statbus.views import home, polls
+from statbus.views import home, polls, rounds
 
 
 def create_app(test_config = None):
@@ -17,6 +17,7 @@ def create_app(test_config = None):
 	# Blueprints
 	app.register_blueprint(home.bp)
 	app.register_blueprint(polls.bp)
+	app.register_blueprint(rounds.bp)
 
 	# Generic handler
 	@app.errorhandler(403)

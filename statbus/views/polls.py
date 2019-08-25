@@ -1,16 +1,14 @@
 from flask import Blueprint, render_template, request
-
+from statbus.database import Poll_question, Poll_option, Poll_vote, Poll_textreply
 
 bp = Blueprint("polls", __name__)
 
 
 @bp.route("/poll")
 def pollmain():
-	offset = request.args.get("offset", "", int)
-	if not offset:
-		offset = 0
+	offset = request.args.get("offset", 0, int)
 	
-	data = (
+	polls = (
 		Poll_question.select(
 			Poll_question.id,
 			Poll_question.question,
@@ -21,16 +19,14 @@ def pollmain():
 		.offset(offset)
 	)
 
-	html = "<ul>"
+	valid_polls = {}
 
-	for poll in data:
+	for poll in polls:
 		if poll.is_hidden():
 			continue
-		html += poll.basic_link()
-
-	html += "</ul>"
+		valid_polls += poll
 	
-	return render_template("polls/polls.html", offset = offset, valid_polls = valid_polls)
+	return render_template("polls/polls.html", offset = offset, polls = valid_polls)
 
 
 @bp.route("/poll/<int:poll_id>")

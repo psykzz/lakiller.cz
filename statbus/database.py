@@ -62,3 +62,18 @@ class Poll_vote(DBModel):
 	ip = IntegerField()
 	adminrank = CharField(max_length = 32, default = "Player")
 	rating = IntegerField(null = True)
+
+
+class Round(DBModel):
+	id = IntegerField(unique = True)
+	initialize_datetime = DateTimeField()
+	start_datetime = DateTimeField(null = True)
+	shutdown_datetime = DateTimeField(null = True)
+	end_datetime = DateTimeField(null = True)
+	server_ip = IntegerField()
+	server_port = SmallIntegerField()
+	commit_hash = CharField(max_length = 40, null = True)
+	game_mode = CharField(max_length = 32, null = True)
+	game_mode_result = CharField(max_length = 64, null = True)
+	end_state = CharField(max_length = 64, null = True)
+	map_name = CharField(max_length = 32, null = True)

@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block body %}
-    <form form action='/poll' method='get'>
+    <form form action='/round' method='get'>
         Offset: 
         <input value='{{offset}}' name='offset' type='text'/> <br />
         <input value='Load' type='submit'/>
     </form>
     <div>
         <ul>
-            {% for poll in polls %}
+            {% for round in rounds %}
                 <li>
-                    Poll #{{poll.id}} {{poll.question}}<a href='/poll/{{poll.id}}'>View</a>
+                    Round #{{round.id}} <a href='/round/{{round.id}}'>View</a>
                 </li>
             {% endfor %}
         </ul>

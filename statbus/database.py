@@ -38,10 +38,6 @@ class Poll_question(DBModel):
 	def is_hidden(self):
 		return self.adminonly or self.dontshow
 
-	@property
-	def link_url(self):
-		return f"/poll/{self.pollid}"
-
 
 class Poll_textreply(DBModel):
 	id = IntegerField(unique = True)

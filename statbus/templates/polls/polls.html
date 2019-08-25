@@ -9,7 +9,7 @@
         <ul>
             {% for poll in polls %}
                 <li>
-                    Poll #{{poll.id}} {{poll.question}}<a href='/poll/{{poll.id}}'>View</a>
+                    Poll #{{poll.id}} {{poll.question}} | <a href='/poll/{{poll.id}}'>View</a>
                 </li>
             {% endfor %}
         </ul>

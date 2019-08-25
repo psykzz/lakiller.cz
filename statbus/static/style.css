@@ -27,6 +27,10 @@ a:hover {
 .left {
 	text-align: left;
 }
+.vote {
+	display: inline-block;
+	width: 150px;
+}
 .footer {
 	margin-top: auto;
 	height: 30px;

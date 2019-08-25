@@ -5,20 +5,13 @@ from .config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 
 
 # Setup the mysql connection and flaskdb wrapper.
-db = MySQLConnectorDatabase(database = DB_NAME, host = DB_HOST, port = DB_PORT, user = DB_USER, passwd = DB_PASS)
-db_wrapper = FlaskDB(None, db)
-
-
+db_wrapper = FlaskDB()
 
 
 # Meta model all models should parent from
 class DBModel(db_wrapper.Model):
-	class Meta:
-		database = db
+	pass
 
-'''
-Models!
-'''
 
 class Poll_option(DBModel):
 	id = IntegerField(unique = True)

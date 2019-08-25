@@ -2,14 +2,20 @@
 
 import pytest
 
-from statbus import app
+from statbus import create_app
 
 
 @pytest.fixture
 def client():
-    # Set testing and create test client
-    app.app.config['TESTING'] = True
-    client = app.app.test_client()
+    config = {}
+    config['DATABASE'] = {
+        'name': './testing.db',
+        'engine': 'peewee.SqliteDatabase',
+    }
+    config['TESTING'] = True
+
+    app = create_app(config)
+    client = app.test_client()
 
     yield client
 
@@ -20,4 +26,4 @@ def test_homepage(client):
     """Start with a blank database."""
 
     rv = client.get('/')
-    assert b'No entries here so far' in rv.data
+    assert b'Welcome!' in rv.data

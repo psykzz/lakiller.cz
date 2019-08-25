@@ -1,5 +1,5 @@
 -r requirements.txt
 pytest
 pytest-cov
-flask8
+flake8
 tox

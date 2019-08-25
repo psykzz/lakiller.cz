@@ -1,5 +1,3 @@
-
-
 import pytest
 
 from statbus import create_app

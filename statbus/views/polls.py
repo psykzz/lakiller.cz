@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, abort
+from playhouse.flask_utils import PaginatedQuery
 from statbus.database import Poll_question, Poll_option, Poll_vote, Poll_textreply
 from peewee import fn, JOIN
 
@@ -7,7 +8,7 @@ bp = Blueprint("polls", __name__)
 
 @bp.route("/poll")
 def pollmain():
-	offset = request.args.get("offset", 0, int)
+	page = request.args.get("page", 1, int)
 	
 	polls = (
 		Poll_question.select(
@@ -17,11 +18,11 @@ def pollmain():
 			Poll_question.dontshow,
 		)
 		.where(Poll_question.adminonly == False and Poll_question.dontshow == False)
-		.limit(50)
-		.offset(offset)
 	)
+
+	pages = PaginatedQuery(polls, 25, page)
 	
-	return render_template("polls/polls.html", offset = offset, polls = polls)
+	return render_template("polls/polls.html", pages = pages)
 
 
 @bp.route("/poll/<int:poll_id>")

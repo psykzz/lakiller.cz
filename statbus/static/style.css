@@ -31,6 +31,17 @@ a:hover {
 	display: inline-block;
 	width: 150px;
 }
+.round {
+	display: inline-block;
+	width: 100px;
+}
+.pagination {
+	display: inline-block;
+	margin-top: 20px;
+}
+.pagination a {
+	padding: 0px 5px;
+}
 .footer {
 	margin-top: auto;
 	height: 30px;

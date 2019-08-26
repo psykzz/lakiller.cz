@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, abort
 from statbus.database import Poll_question, Poll_option, Poll_vote, Poll_textreply
 from peewee import fn, JOIN
 

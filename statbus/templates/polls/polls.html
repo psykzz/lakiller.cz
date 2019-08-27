@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 {% block body %}
-    <form form action='/poll' method='get'>
-        Offset: 
-        <input value='{{offset}}' name='offset' type='text'/> <br />
-        <input value='Load' type='submit'/>
-    </form>
-    <div>
-        <ul>
-            {% for poll in polls %}
-                <li>
-                    Poll #{{poll.id}} {{poll.question}}<a href='{{poll.link_url}}'>View</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<div>
+	{% for poll in pages.get_object_list() %}
+		Poll #{{poll.id}} {{poll.question}} | <a href='{{poll.link_url}}'>View</a><br>
+	{% endfor %}
+</div>
+<div class="pagination">
+	{% for i in range(pages.get_page_count()) %}
+	  <a href="?page={{i+1}}">{{i+1}}</a>
+	{% endfor %}
+</div>
 {% endblock body %}

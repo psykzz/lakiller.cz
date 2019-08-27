@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+from playhouse.flask_utils import PaginatedQuery
 from statbus.database import Round
 
 
@@ -6,9 +7,7 @@ bp = Blueprint("rounds", __name__)
 
 
 @bp.route("/round")
-def roundmain():
-	offset = request.args.get("offset", 0, int)
-	
+def roundmain():	
 	rounds = (
 		Round.select(
 			Round.id,
@@ -16,8 +15,8 @@ def roundmain():
 			Round.game_mode_result,
 			Round.map_name,
 		)
-		.limit(25)
-		.offset(offset)
 	)
+
+	pages = PaginatedQuery(rounds, 30, "page")
 	
-	return render_template("rounds/rounds.html", offset = offset, rounds = rounds)
+	return render_template("rounds/rounds.html", pages = pages)

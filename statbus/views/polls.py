@@ -1,12 +1,14 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, abort
+from playhouse.flask_utils import PaginatedQuery
 from statbus.database import Poll_question, Poll_option, Poll_vote, Poll_textreply
+from peewee import fn, JOIN
 
 bp = Blueprint("polls", __name__)
 
 
 @bp.route("/poll")
 def pollmain():
-	offset = request.args.get("offset", 0, int)
+	page = request.args.get("page", 1, int)
 	
 	polls = (
 		Poll_question.select(
@@ -15,32 +17,35 @@ def pollmain():
 			Poll_question.adminonly,
 			Poll_question.dontshow,
 		)
-		.limit(50)
-		.offset(offset)
+		.where(Poll_question.adminonly == False, Poll_question.dontshow == False)
 	)
 
-	valid_polls = [poll for poll in polls if poll.id_hidden()]
-	return render_template("polls/polls.html", offset = offset, polls = valid_polls)
+	pages = PaginatedQuery(polls, 25, page)
+	
+	return render_template("polls/polls.html", pages = pages)
 
 
 @bp.route("/poll/<int:poll_id>")
-def view_poll(poll_id):
+def pollid(poll_id):
 	poll = Poll_question.select().where(Poll_question.id == poll_id).first()
-	if not poll or poll.is_hidden():
+	if not poll or not poll_id or poll.is_hidden():
 		abort(404)
 
 	if poll.polltype == "OPTION":
-		options = Poll_option.select(Poll_option.text).where(
-			Poll_option.pollid == pollid
-		)
-		votes_by_option = (
-			Poll_vote.select(Poll_vote.optionid, fn.Count(Poll_vote.id).alias("votes"))
-			.where(Poll_vote.pollid == pollid, Poll_vote.optionid._in([1, 2]))
-			.group_by(Poll_vote.optionid)
-			.dicts()
-		)
+		votes = (
+				Poll_option.select(
+					Poll_option.text,
+					fn.Count(Poll_vote.id).alias("votes")
+				)
+				.join(Poll_vote, JOIN.LEFT_OUTER, on = (Poll_option.id == Poll_vote.optionid))
+				.group_by(Poll_option.text)
+				.order_by(Poll_vote.optionid)
+			)
 
-		return render_template("polls/detail_option.html", options = options, votes = votes_by_option)
+		total = sum([x.votes for x in votes])
+		percentages = [(int(x.votes) / total) * 100 for x in votes]
+		
+		return render_template("polls/detail_option.html", poll = poll, votes = votes, percentages = percentages)
 
 	elif poll.polltype == "TEXT":
 		return render_template("polls/detail_text.html", poll = poll)

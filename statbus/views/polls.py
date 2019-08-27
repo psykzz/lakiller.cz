@@ -17,7 +17,7 @@ def pollmain():
 			Poll_question.adminonly,
 			Poll_question.dontshow,
 		)
-		.where(Poll_question.adminonly == False and Poll_question.dontshow == False)
+		.where(Poll_question.adminonly == False, Poll_question.dontshow == False)
 	)
 
 	pages = PaginatedQuery(polls, 25, page)

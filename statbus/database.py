@@ -1,3 +1,4 @@
+from flask import url_for
 from playhouse.mysql_ext import MySQLConnectorDatabase
 from playhouse.flask_utils import FlaskDB
 from peewee import *
@@ -37,6 +38,10 @@ class Poll_question(DBModel):
 
 	def is_hidden(self):
 		return self.adminonly or self.dontshow
+
+	@property
+	def link_url(self):
+		return url_for('polls.view_poll', poll_id=self.id)
 
 
 class Poll_textreply(DBModel):

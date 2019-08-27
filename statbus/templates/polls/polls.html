@@ -2,7 +2,7 @@
 {% block body %}
 <div>
 	{% for poll in pages.get_object_list() %}
-		Poll #{{poll.id}} {{poll.question}} | <a href='/poll/{{poll.id}}'>View</a><br>
+		Poll #{{poll.id}} {{poll.question}} | <a href='{{poll.link_url}}'>View</a><br>
 	{% endfor %}
 </div>
 <div class="pagination">

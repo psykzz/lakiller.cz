@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 {% block body %}
-    <form form action='/round' method='get'>
-        Offset: 
-        <input value='{{offset}}' name='offset' type='text'/> <br />
-        <input value='Load' type='submit'/>
-    </form>
-    <div>
-        <ul>
-            {% for round in rounds %}
-                <li>
-                    Round #{{round.id}} <a href='/round/{{round.id}}'>View</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<div>
+{% for round in pages.get_object_list() %}
+	<label class="round">Round ID {{round.id}}</label> | <a href='/round/{{round.id}}'>View</a><br>
+{% endfor %}
+</div>
+<div class="pagination">
+{% for i in range(pages.get_page_count()) %}
+  <a href="?page={{i+1}}">{{i+1}}</a>
+{% endfor %}
+</div>
 {% endblock body %}

@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block header %}
+Polls
+{% endblock header %}
 {% block body %}
 <div>
 	{% for poll in pages.get_object_list() %}

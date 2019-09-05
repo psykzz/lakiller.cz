@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block header %}
+Rounds
+{% endblock header %}
 {% block body %}
 <div class="rounds">
 {% for round in pages.get_object_list() %}

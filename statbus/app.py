@@ -14,6 +14,9 @@ def create_app(test_config = None):
 	cache.init_app(app)
 	db_wrapper.init_app(app)
 
+	app.jinja_env.trim_blocks = True
+	app.jinja_env.lstrip_blocks = True
+
 	# Blueprints
 	app.register_blueprint(home.bp)
 	app.register_blueprint(polls.bp)

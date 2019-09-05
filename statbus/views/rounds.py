@@ -15,6 +15,7 @@ def roundmain():
 			Round.game_mode_result,
 			Round.map_name,
 		)
+		.order_by(Round.id.desc())
 	)
 
 	pages = PaginatedQuery(rounds, 30, "page")

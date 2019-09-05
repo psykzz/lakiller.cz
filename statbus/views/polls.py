@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, abort
 from playhouse.flask_utils import PaginatedQuery
 from statbus.database import Poll_question, Poll_option, Poll_vote, Poll_textreply
 from peewee import fn, JOIN
+from datetime import datetime
 
 bp = Blueprint("polls", __name__)
 
@@ -43,7 +44,7 @@ def pollid(poll_id):
 		total = sum([x.votes for x in votes])
 		percentages = ["{0:.2f}".format((int(x.votes) / total) * 100) for x in votes]
 		
-		return render_template("polls/detail_option.html", poll = poll, votes = votes, percentages = percentages)
+		return render_template("polls/detail_option.html", poll = poll, votes = votes, percentages = percentages, datetime = datetime)
 
 	elif poll.polltype == "TEXT":
 		return render_template("polls/detail_text.html", poll = poll)

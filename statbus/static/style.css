@@ -1,12 +1,9 @@
-html, body {
-    font-family: Helvetica, sans-serif;
-    height: 100%;
-    margin: 0;
-}
-body { 
-	display:flex; 
-	flex-direction:column; 
-	justify-content: center;
+body {
+	font-family: Helvetica, sans-serif;
+	height: 100%;
+	margin: 0;
+	display: flex; 
+	flex-direction: column;
 	align-items: center;
 }
 a {
@@ -16,25 +13,16 @@ a {
 a:hover {
 	color: silver;
 }
-.header {
+header {
 	font-size: 150%;
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
 .container {
-	text-align: center;
+	width: 50%;
 }
-.left {
-	text-align: left;
-}
-.rounds {
-	text-align: center;
-	width: 200px;
-	height: 550px;
-}
-.round {
-	display: inline-block;
-	width: 100px;
+.center {
+	text-align: center
 }
 .pagination {
 	display: inline-block;
@@ -43,7 +31,7 @@ a:hover {
 .pagination a {
 	padding: 0px 5px;
 }
-.footer {
+footer {
 	margin-top: auto;
 	height: 30px;
 	width: 100%;

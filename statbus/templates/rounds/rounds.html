@@ -1,13 +1,9 @@
 {% extends "base.html" %}
 {% block body %}
-<div>
+<div class="rounds">
 {% for round in pages.get_object_list() %}
-	<label class="round">Round ID {{round.id}}</label> | <a href='/round/{{round.id}}'>View</a><br>
+	<label class="round">Round ID {{round.id}}</label> | <a href="{{round.link_url}}">View</a><br>
 {% endfor %}
 </div>
-<div class="pagination">
-{% for i in range(pages.get_page_count()) %}
-  <a href="?page={{i+1}}">{{i+1}}</a>
-{% endfor %}
-</div>
+{% include "pages.html" %}
 {% endblock body %}

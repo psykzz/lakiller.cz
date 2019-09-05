@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="left">
-<p><b>Details about poll ID {{ poll.id }}:</b></p>
+<p><b>Details about poll #{{ poll.id }}:</b></p>
 {% include "polls/poll_info.html" %}
 <br>
 {% for vote in votes %}
-	<label class="vote"><b>{{loop.index}}.</b> {{ vote.text }}</label>{{ vote.votes }} votes ({{percentages[loop.index-1]}}%)<br>
+	<b>{{loop.index}}.</b> {{vote.text}} - {{vote.votes}} votes ({{percentages[loop.index-1]}}%)<br>
 {% endfor %}
 </div>
 {% endblock body %}

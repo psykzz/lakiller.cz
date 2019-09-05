@@ -7,9 +7,7 @@ bp = Blueprint("polls", __name__)
 
 
 @bp.route("/poll")
-def pollmain():
-	page = request.args.get("page", 1, int)
-	
+def pollmain():	
 	polls = (
 		Poll_question.select(
 			Poll_question.id,
@@ -20,7 +18,7 @@ def pollmain():
 		.where(Poll_question.adminonly == False, Poll_question.dontshow == False)
 	)
 
-	pages = PaginatedQuery(polls, 25, page)
+	pages = PaginatedQuery(polls, 25, "page")
 	
 	return render_template("polls/polls.html", pages = pages)
 
@@ -43,7 +41,7 @@ def pollid(poll_id):
 			)
 
 		total = sum([x.votes for x in votes])
-		percentages = [(int(x.votes) / total) * 100 for x in votes]
+		percentages = ["{0:.2f}".format((int(x.votes) / total) * 100) for x in votes]
 		
 		return render_template("polls/detail_option.html", poll = poll, votes = votes, percentages = percentages)
 

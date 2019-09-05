@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, abort
 from playhouse.flask_utils import PaginatedQuery
 from statbus.database import Round
 
@@ -20,3 +20,8 @@ def roundmain():
 	pages = PaginatedQuery(rounds, 30, "page")
 	
 	return render_template("rounds/rounds.html", pages = pages)
+
+
+@bp.route("/round/<int:round_id>")
+def roundid(round_id):
+	abort(404)

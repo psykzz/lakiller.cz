@@ -27,9 +27,10 @@ a:hover {
 .left {
 	text-align: left;
 }
-.vote {
-	display: inline-block;
-	width: 150px;
+.rounds {
+	text-align: center;
+	width: 200px;
+	height: 550px;
 }
 .round {
 	display: inline-block;

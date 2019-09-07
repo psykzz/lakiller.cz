@@ -37,6 +37,7 @@ def pollid(poll_id):
 					fn.Count(Poll_vote.id).alias("votes")
 				)
 				.join(Poll_vote, JOIN.LEFT_OUTER, on = (Poll_option.id == Poll_vote.optionid))
+				.where(Poll_vote.pollid == poll_id)
 				.group_by(Poll_option.text)
 				.order_by(Poll_vote.optionid)
 			)

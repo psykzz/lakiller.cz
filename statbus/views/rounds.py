@@ -25,4 +25,8 @@ def roundmain():
 
 @bp.route("/round/<int:round_id>")
 def roundid(round_id):
-	abort(404)
+	round_info = Round.select().where(Round.id == round_id).first()
+	if not round_info:
+		abort(404)
+
+	return render_template("rounds/round_info.html", round_info = round_info)

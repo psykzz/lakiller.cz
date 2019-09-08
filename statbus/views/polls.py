@@ -27,7 +27,7 @@ def pollmain():
 @bp.route("/poll/<int:poll_id>")
 def pollid(poll_id):
 	poll = Poll_question.select().where(Poll_question.id == poll_id).first()
-	if not poll or not poll_id or poll.is_hidden():
+	if not poll or poll.is_hidden():
 		abort(404)
 
 	if poll.polltype == "OPTION":

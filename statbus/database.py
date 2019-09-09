@@ -2,6 +2,7 @@ from flask import url_for, request
 from playhouse.mysql_ext import MySQLConnectorDatabase
 from peewee import *
 
+from statbus.util import FlaskDBWrapper as FlaskDB
 
 # Setup the mysql connection and flaskdb wrapper.
 db_wrapper = FlaskDB()

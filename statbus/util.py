@@ -7,4 +7,4 @@ class FlaskDBWrapper(FlaskDB):
     def connect_db(self):
         if request.endpoint in ('static',):
             return
-        return self.database.connect()
+        self.database.connect()

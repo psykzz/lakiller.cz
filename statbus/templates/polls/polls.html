@@ -1,13 +1,12 @@
 {% extends "base.html" %}
+{% block header %}
+Polls
+{% endblock header %}
 {% block body %}
 <div>
 	{% for poll in pages.get_object_list() %}
-		Poll #{{poll.id}} {{poll.question}} | <a href='{{poll.link_url}}'>View</a><br>
+		<b>Poll #{{poll.id}}</b> {{poll.question}} | <a href='{{poll.link_url}}'>View</a><br>
 	{% endfor %}
 </div>
-<div class="pagination">
-	{% for i in range(pages.get_page_count()) %}
-	  <a href="?page={{i+1}}">{{i+1}}</a>
-	{% endfor %}
-</div>
+{% include "pages.html" %}
 {% endblock body %}

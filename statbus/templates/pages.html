@@ -1,0 +1,7 @@
+{% if pages.get_page_count() > 1 %}
+<div class="pagination">
+	{% for i in range(pages.get_page_count()) %}
+	  <a href="?page={{i+1}}">{{i+1}}</a>
+	{% endfor %}
+</div>
+{% endif %}

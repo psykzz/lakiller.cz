@@ -7,10 +7,14 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{{url_for('static', filename='favicon.png')}}"/>
 </head>
 <body>
-	<div class='header'>Welcome!</div>
-	<div class='container'>
-	{% block body %} {% endblock body %}
+	<header>
+	{% block header %}
+	{% endblock header %}
+	</header>
+	<div class="container">
+		{% block body %}
+		{% endblock body %}
 	</div>
-	<div class='footer'><a href='/'>Home</a> | Made by LaKiller8 | <a href='https://github.com/DominikPanic/lakiller.cz'>Source</a></div>
+	<footer><a href="{{url_for('home.index')}}">Home</a> | Made by LaKiller8 | <a href="https://github.com/DominikPanic/lakiller.cz">Source</a></footer>
 </body>
 </html>

@@ -1,5 +1,12 @@
 {% extends "base.html" %}
+{% block header %}
+	Welcome!
+{% endblock header %}
 {% block body %}
-<p>Please, select a function:</p>
-<a href='/poll'>Polls</a>
+	<div class="center">
+		<p>Please, select a function:</p>
+		<a href="{{url_for('polls.pollmain')}}">Polls</a><br>
+		<a href="{{url_for('rounds.roundmain')}}">Rounds</a><br>
+		<a href="{{url_for('rounds.winrates')}}">Winrates</a>
+	</div>
 {% endblock body %}

@@ -1,56 +1,51 @@
-from flask import Blueprint, render_template, request
-
+from flask import Blueprint, render_template, request, abort
+from playhouse.flask_utils import PaginatedQuery
+from statbus.database import Poll_question, Poll_option, Poll_vote, Poll_textreply
+from peewee import fn, JOIN
+from datetime import datetime
 
 bp = Blueprint("polls", __name__)
 
 
 @bp.route("/poll")
-def pollmain():
-	offset = request.args.get("offset", "", int)
-	if not offset:
-		offset = 0
-	
-	data = (
+def pollmain():	
+	polls = (
 		Poll_question.select(
 			Poll_question.id,
 			Poll_question.question,
 			Poll_question.adminonly,
 			Poll_question.dontshow,
 		)
-		.limit(50)
-		.offset(offset)
+		.where(Poll_question.adminonly == False, Poll_question.dontshow == False)
 	)
 
-	html = "<ul>"
-
-	for poll in data:
-		if poll.is_hidden():
-			continue
-		html += poll.basic_link()
-
-	html += "</ul>"
+	pages = PaginatedQuery(polls, 25, "page")
 	
-	return render_template("polls/polls.html", offset = offset, valid_polls = valid_polls)
+	return render_template("polls/polls.html", pages = pages)
 
 
 @bp.route("/poll/<int:poll_id>")
 def pollid(poll_id):
-	poll = Poll_question.select().where(Poll_question.id == pollid).first()
+	poll = Poll_question.select().where(Poll_question.id == poll_id).first()
 	if not poll or poll.is_hidden():
 		abort(404)
 
 	if poll.polltype == "OPTION":
-		options = Poll_option.select(Poll_option.text).where(
-			Poll_option.pollid == pollid
-		)
-		votes_by_option = (
-			Poll_vote.select(Poll_vote.optionid, fn.Count(Poll_vote.id).alias("votes"))
-			.where(Poll_vote.pollid == pollid, Poll_vote.optionid._in([1, 2]))
-			.group_by(Poll_vote.optionid)
-			.dicts()
-		)
+		votes = (
+				Poll_option.select(
+					Poll_option.text,
+					fn.Count(Poll_vote.id).alias("votes")
+				)
+				.join(Poll_vote, JOIN.LEFT_OUTER, on = (Poll_option.id == Poll_vote.optionid))
+				.where(Poll_vote.pollid == poll_id)
+				.group_by(Poll_option.text)
+				.order_by(Poll_vote.optionid)
+			)
 
-		return render_template("polls/detail_option.html", options = options, votes = votes_by_option)
+		total = sum([x.votes for x in votes])
+		percentages = ["{0:.2f}".format((int(x.votes) / total) * 100) for x in votes]
+		
+		return render_template("polls/detail_option.html", poll = poll, votes = votes, percentages = percentages, datetime = datetime)
 
 	elif poll.polltype == "TEXT":
 		return render_template("polls/detail_text.html", poll = poll)

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block header %}
+	Rounds
+{% endblock header %}
+{% block body %}
+	<div>
+	{% for round in pages.get_object_list() %}
+		Round ID {{round.id}} | <a href="{{round.link_url}}">View</a><br>
+	{% endfor %}
+	</div>
+{% include "pages.html" %}
+{% endblock body %}

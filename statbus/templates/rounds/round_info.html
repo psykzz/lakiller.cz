@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block header %}
+	Round #{{round_info.id}}
+{% endblock header %}
+{% block body %}
+	<div class="left">
+		<p><b>Details about Round #{{round_info.id}}:</b></p>
+		<br>
+		{% if round_info.server_port and round_info.server_ip %}
+			<b>Server:</b> {{round_info.server_ip}}:{{round_info.server_port}}<br>
+		{% endif %}
+		{% if round_info.commit_hash %}
+			<b>Commit hash:</b> {{round_info.commit_hash}}<br>
+		{% endif %}
+		{% if round_info.start_datetime %}
+			<b>Start time:</b> {{round_info.start_datetime}}<br>
+		{% endif %}
+		{% if round_info.end_datetime %}
+			<b>End time:</b> {{round_info.end_datetime}}<br>
+		{% endif %}
+		{% if round_info.start_datetime and round_info.end_datetime %}
+			<b>Duration:</b> {{round_info.end_datetime - round_info.start_datetime}}<br>
+		{% endif %}
+		{% if round_info.map_name %}
+			<b>Map name:</b> {{round_info.map_name}}<br>
+		{% endif %}
+		{% if round_info.game_mode %}
+			<b>Game mode:</b> {{round_info.game_mode}}<br>
+		{% endif %}
+		{% if round_info.game_mode_result %}
+			<b>Result:</b> {{round_info.game_mode_result}}<br>
+		{% endif %}
+		{% if round_info.end_state %}
+			<b>End state:</b> {{round_info.end_state}}<br>
+		{% endif %}
+		<div class="back">
+			<a href="{{url_for('rounds.roundmain')}}">Back</a>
+		</div>
+	</div>
+{% endblock body %}

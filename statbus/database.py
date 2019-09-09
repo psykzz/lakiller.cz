@@ -1,7 +1,7 @@
+from flask import url_for, request
 from playhouse.mysql_ext import MySQLConnectorDatabase
 from peewee import *
 
-from statbus.util import FlaskDBWrapper as FlaskDB
 
 # Setup the mysql connection and flaskdb wrapper.
 db_wrapper = FlaskDB()
@@ -41,7 +41,7 @@ class Poll_question(DBModel):
 
 	@property
 	def link_url(self):
-		return f"/poll/{self.pollid}"
+		return url_for('polls.pollid', poll_id = self.id)
 
 
 class Poll_textreply(DBModel):
@@ -63,3 +63,22 @@ class Poll_vote(DBModel):
 	ip = IntegerField()
 	adminrank = CharField(max_length = 32, default = "Player")
 	rating = IntegerField(null = True)
+
+
+class Round(DBModel):
+	id = IntegerField(unique = True)
+	initialize_datetime = DateTimeField()
+	start_datetime = DateTimeField(null = True)
+	shutdown_datetime = DateTimeField(null = True)
+	end_datetime = DateTimeField(null = True)
+	server_ip = IntegerField()
+	server_port = SmallIntegerField()
+	commit_hash = CharField(max_length = 40, null = True)
+	game_mode = CharField(max_length = 32, null = True)
+	game_mode_result = CharField(max_length = 64, null = True)
+	end_state = CharField(max_length = 64, null = True)
+	map_name = CharField(max_length = 32, null = True)
+
+	@property
+	def link_url(self):
+		return url_for('rounds.roundid', round_id = self.id)
